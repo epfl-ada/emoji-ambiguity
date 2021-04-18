@@ -1,7 +1,9 @@
 import os
+import random
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
@@ -55,3 +57,28 @@ def emoji_scatter(x, y, emoji, ax=None, zoom=1):
     ax.update_datalim(np.column_stack([x, y]))
     ax.autoscale()
     return artists
+
+
+def get_emojis_per_bin(ax, vocabs):
+    df = {"bin": [], "example_emojis": []}
+    bins = get_hist(ax)
+    bin_low_limit = bins[0]
+    for bin_up_limit in bins[1:]:
+        emojis = vocabs[(vocabs.entropy > bin_low_limit) & (vocabs.entropy < bin_up_limit)].index.values
+        try:
+            bin_emojis = random.sample(list(emojis), 3)
+        except ValueError:
+            bin_emojis = list(emojis)
+        df["bin"].append((round(bin_low_limit, 2), round(bin_up_limit, 2)))
+        df["example_emojis"].append(bin_emojis)
+        bin_low_limit = bin_up_limit
+    return pd.DataFrame(df)
+
+
+def get_hist(ax):
+    bins = []
+    for rect in ax.patches:
+        ((x0, y0), (x1, y1)) = rect.get_bbox().get_points()
+        bins.append(x0)  # left edge of each bin
+    bins.append(x1)  # also get right edge of last bin
+    return bins

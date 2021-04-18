@@ -4,9 +4,53 @@ from functools import partial
 from itertools import product
 
 import numpy as np
+from gensim import models as gs
 from scipy.spatial.distance import cosine as cosine_distance
 
 from src.data.utils import flatten
+
+
+def calculate_vocabulary_variation(element, embeddings):
+    mode_embedding = get_mode_embedding(element, embeddings)
+    if mode_embedding is not None:
+        total_count = sum(element.values())
+        mode_vec = np.expand_dims(mode_embedding, 0)
+        emocab_variance = 0
+        for emoji, count in element.items():
+            # emoji_vec = embeddings.get_vector(emoji)
+            emoji_vec = get_embedding(embeddings, emoji)
+            if emoji_vec is not None:
+                emoji_vec = np.expand_dims(emoji_vec, 0)
+                distance = cosine_distance(mode_vec, emoji_vec)
+                emocab_variance += (count / total_count) * distance
+        return emocab_variance
+    return np.nan
+
+
+def calculate_cldr_distance(vocabulary, embeddings, cldr_desc):
+    pairs = list(product(list(vocabulary.keys()), list(cldr_desc)))
+    total_count = sum(vocabulary.values())
+    total_distance = 0
+    for pair in pairs:
+        vec1 = get_embedding(embeddings, pair[0])
+        # vec2 = embeddings.get(pair[1], None)
+        vec2 = get_embedding(embeddings, pair[1])
+        if vec1 is not None and vec2 is not None:
+            probability = vocabulary[pair[0]] / total_count
+            total_distance += cosine_distance(vec1, vec2) * probability
+    return total_distance
+
+
+def get_mode_embedding(element, embeddings):
+    mode_emoji = element.most_common(1)[0][0]
+    return get_embedding(embeddings, mode_emoji)
+
+
+def get_embedding(embeddings, word):
+    try:
+        return embeddings.get_vector(word)
+    except KeyError:
+        return None
 
 
 def find_embedding(description, embeddings):
@@ -31,9 +75,11 @@ def find_embedding(description, embeddings):
     return vec
 
 
-def get_mode_embedding(element, embeddings):
-    mode_description = element.most_common(1)[0][0]
-    return embeddings.get(mode_description, None)
+def read_embeddings(embeddings_path):
+    word_embeddings = gs.KeyedVectors.load_word2vec_format(embeddings_path, binary=True)
+    word_embeddings.vocab = {description.replace("-", " "): vector for description, vector in
+                             word_embeddings.vocab.items()}
+    return word_embeddings
 
 
 def embedded_CIs(func, vocabulary, word_embeddings, num_draws=1000, alpha=5, **kwargs):
@@ -47,32 +93,3 @@ def embedded_CIs(func, vocabulary, word_embeddings, num_draws=1000, alpha=5, **k
 def resampling(num_draw, func, annotations, word_embeddings, **kwargs):
     sampled = Counter(random.choices(annotations, k=len(annotations)))
     return func(sampled, word_embeddings, **kwargs)
-
-
-def calculate_vocabulary_variation(element, embeddings):
-    mode_embedding = get_mode_embedding(element, embeddings)
-    if mode_embedding is not None:
-        total_count = sum(element.values())
-        mode_vec = np.expand_dims(mode_embedding, 0)
-        vocab_variance = 0
-        for word, count in element.items():
-            word_vec = embeddings.get(word, None)
-            if word_vec is not None:
-                word_vec = np.expand_dims(word_vec, 0)
-                distance = cosine_distance(mode_vec, word_vec)
-                vocab_variance += (count / total_count) * distance
-        return vocab_variance
-    return np.nan
-
-
-def calculate_cldr_distance(vocabulary, embeddings, cldr_desc):
-    pairs = list(product(list(vocabulary.keys()), list(cldr_desc)))
-    total_count = sum(vocabulary.values())
-    total_distance = 0
-    for pair in pairs:
-        vec1 = embeddings.get(pair[0], None)
-        vec2 = embeddings.get(pair[1], None)
-        if vec1 is not None and vec2 is not None:
-            probability = vocabulary[pair[0]] / total_count
-            total_distance += cosine_distance(vec1, vec2) * probability
-    return total_distance

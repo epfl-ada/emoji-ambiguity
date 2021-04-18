@@ -1,19 +1,18 @@
 import argparse
-import pickle
 from collections import Counter
 
 import pandas as pd
 
+from analysis.embedded import read_embeddings
 from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH
 from src.analysis.embedded import calculate_vocabulary_variation, embedded_CIs
-from src.data.utils import parallelize_dataframe
-from src.data.utils import save_to_csv
+from utils import parallelize_dataframe, save_to_csv
 
 pd.set_option('mode.chained_assignment', None)
 
 # example usage
 # python3 save_ambiguity_variation_CIs.py
-# --output data/interim/ambiguity_variation.csv
+# --output data/interim/TESTambiguity_variation.csv
 
 
 if __name__ == "__main__":
@@ -22,12 +21,13 @@ if __name__ == "__main__":
     parser.add_argument('--output', action='store', required=True,
                         help='Location of the output csv with emoji'
                              ' semantic variation with confidence intervals')
+    parser.add_argument('--num-cpus',
+                        help='Number of cores to use for computing confidence intervals')
     args = parser.parse_args()
 
     print("Reading data...")
     emojis = pd.read_csv(AMBIGUITY_PATH, encoding='utf-8')
-    with open(EMBEDDINGS_PATH, "rb") as f:
-        word_embeddings = pickle.load(f)
+    word_embeddings = read_embeddings(EMBEDDINGS_PATH)
 
     print("Preprocessing...")
     vocabularies = emojis[["emoji", "word"]] \
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     func = lambda partial_df: partial_df.apply(lambda row: embedded_CIs(calculate_vocabulary_variation,
                                                                         row.vocabulary, word_embeddings),
                                                axis=1)
-    CIs = parallelize_dataframe(vocabularies, func)
+    CIs = parallelize_dataframe(vocabularies, func, n_cores=args.num_cpus)
     vocabularies["CIs"] = CIs
 
     print("Saving csv...")

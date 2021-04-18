@@ -1,9 +1,9 @@
 import argparse
-import pickle
 from collections import Counter
 
 import pandas as pd
 
+from analysis.embedded import read_embeddings
 from settings import EMBEDDINGS_PATH, AMBIGUITY_PATH, CLDR_ANNS_PATH
 from src.analysis.embedded import calculate_cldr_distance, embedded_CIs
 from src.data.cldr import cldr_anns_to_df
@@ -25,8 +25,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("Reading data...")
-    with open(EMBEDDINGS_PATH, "rb") as f:
-        word_embeddings = pickle.load(f)
+    word_embeddings = read_embeddings(EMBEDDINGS_PATH)
     emojis = pd.read_csv(AMBIGUITY_PATH, encoding='utf-8')
 
     print("Preprocessing...")
