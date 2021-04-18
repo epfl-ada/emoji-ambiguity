@@ -7,7 +7,7 @@ import numpy as np
 from gensim import models as gs
 from scipy.spatial.distance import cosine as cosine_distance
 
-from src.data.utils import flatten
+from data.utils import flatten
 
 
 def calculate_vocabulary_variation(element, embeddings):

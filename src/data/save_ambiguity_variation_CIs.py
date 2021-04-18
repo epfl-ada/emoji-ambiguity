@@ -3,9 +3,9 @@ from collections import Counter
 
 import pandas as pd
 
+from analysis.embedded import calculate_vocabulary_variation, embedded_CIs
 from analysis.embedded import read_embeddings
 from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH
-from src.analysis.embedded import calculate_vocabulary_variation, embedded_CIs
 from utils import parallelize_dataframe, save_to_csv
 
 pd.set_option('mode.chained_assignment', None)
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('--output', action='store', required=True,
                         help='Location of the output csv with emoji'
                              ' semantic variation with confidence intervals')
-    parser.add_argument('--num-cpus',
+    parser.add_argument('--num-cpus', type=int,
                         help='Number of cores to use for computing confidence intervals')
     args = parser.parse_args()
 
