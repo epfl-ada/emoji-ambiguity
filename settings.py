@@ -9,6 +9,7 @@ DEMOGRAPHICS_PATH = os.path.join(project_dir, "data", "raw", "demographic_info.c
 WUS_LOCAL = os.environ.get("WUS_LOCAL")
 WUS_CLUSTER = os.environ.get("WUS_CLUSTER")
 AMBIGUITY_PATH = os.path.join(project_dir, "data", "interim", "ambiguity_dataset.csv.gz")
+AMBIGUITY_CLUSTER = os.environ.get("AMBIGUITY_CLUSTER")
 EMBEDDINGS_PATH = os.path.join(project_dir, "data", "interim", "glove-twitter-200-ambiguity.bin")
 CLDR_ANNS_PATH = os.path.join(project_dir, "data", "external", "cldr_39_alpha4_en.xml")
 CLDR_DISTANCE = os.path.join(project_dir, "data", "interim", "cldr_distance.csv.gz")
