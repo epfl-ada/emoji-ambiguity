@@ -43,4 +43,4 @@ if __name__ == "__main__":
     print("Sampling...")
     out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)["tweet"]
     print("Saving...")
-    save_to_csv(out, args.output)
+    save_to_csv(out, args.output, "\t")
