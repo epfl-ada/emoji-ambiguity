@@ -9,7 +9,7 @@ pd.set_option('mode.chained_assignment', None)
 
 
 # example usage
-# python src/data/sample_tweets --input /scratch/czestoch/emojitweets-01-04-2018.txt.gz
+# python src/data/sample_tweets.py --input /scratch/czestoch/emojitweets-01-04-2018.txt.gz
 # --output /scratch/czestoch/sampled_tweets.txt --N 30 --num-cpus 24
 
 def sample_tweets_by_emojis(tweets, sample_size=30, num_cpus=24):
@@ -32,8 +32,8 @@ if __name__ == "__main__":
     parser.add_argument('--input', required=True,
                         help="Path to the input emoji tweet dataset from kaggle: emojitweets-01-04-2018.txt.gz")
     parser.add_argument('--output', required=True, help="Path to the output downsampled .txt")
-    parser.add_argument('--N', default=30, help="How many tweets to sample per emoji")
-    parser.add_argument('--num-cpus', default=4, help="How many cores to use for processing")
+    parser.add_argument('--N', type=int, default=30, help="How many tweets to sample per emoji")
+    parser.add_argument('--num-cpus', type=int, default=4, help="How many cores to use for processing")
     args = parser.parse_args()
 
     np.random.seed(42)
@@ -41,6 +41,6 @@ if __name__ == "__main__":
     tweets = pd.read_table(args.input, header=None, lineterminator='\n', encoding='utf-8')
     tweets = tweets.rename({0: "tweet"}, axis=1)
     print("Sampling...")
-    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)['tweet'].to_frame()
+    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)
     print("Saving...")
     save_to_csv(out, args.output)

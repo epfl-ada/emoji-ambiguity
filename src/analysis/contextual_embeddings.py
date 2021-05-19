@@ -1,4 +1,6 @@
 import argparse
+import sys
+
 import pandas as pd
 from emoji import get_emoji_regexp
 from pyspark.mllib.linalg import Vectors, VectorUDT
@@ -37,19 +39,22 @@ if __name__ == "__main__":
     parser.add_argument('--input', required=True,
                         help="Path to the input emoji tweet dataset from kaggle: emojitweets-01-04-2018.txt.gz")
     parser.add_argument('--output', required=True, help="Path to the output parquet directory")
-    args = parser.parse_args()
+    parser.add_argument('--num-cpus', required=True, help="Number of cores to use by spark session")
+    args = parser.parse_args(sys.argv[1:])
 
     # create the session
-    spark = SparkSession.builder.getOrCreate()
+    spark = SparkSession \
+        .builder \
+        .appName("Extract BERT embeddings for emojis in tweets") \
+        .config('spark.master', f'local[{args.num_cpus}]')\
+        .getOrCreate()
 
-    # path = "/home/jczestochowska/workspace/dlab/emoji-ambiguity/data/external/emojitweets-01-04-2018.txt.gz"
-    tweets = spark.read.text(args.input).toDF("tweet")
-    tweets = tweets.sample(fraction=0.05, withReplacement=False)
-    print(tweets.count())
+    tweets = spark.read.load(args.input, format="csv", sep=",", inferSchema="true", header="true")
+    eval_emojis = udf(lambda emojis: eval(emojis), ArrayType(StringType()))
+    tweets = tweets.withColumn("emojis", eval_emojis(tweets["emojis"]))
 
     # Initialize BERT model and tokenizer, expand tokenizer with emojis
     all_emojis = set(pd.read_csv(AMBIGUITY_PATH, encoding='utf-8').emoji.unique())
-    tweets = tweets.withColumn("emojis", curry_find_emojis(all_emojis)(tweets["tweet"]))
     model = BertModel.from_pretrained('bert-base-uncased')
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     original_tokenizer_size = len(tokenizer)
@@ -70,5 +75,4 @@ if __name__ == "__main__":
     func = udf(lambda vs: Vectors.dense(vs), VectorUDT())
     df = df.withColumn("embedding", func("embedding"))
 
-    # out_path = "/home/jczestochowska/workspace/dlab/emoji-ambiguity/data/interim/tweets_embeddings"
     df.select("emoji", "embedding").write.partitionBy("emoji").format("parquet").save(args.output)
