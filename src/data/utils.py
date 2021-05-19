@@ -28,6 +28,10 @@ def apply_contains_emoji(df):
     return df.apply(contains_emoji)
 
 
+def apply_find_emojis(df, text_col='tweet'):
+    return df[text_col].apply(find_emojis)
+
+
 def contains_emoji(text):
     return bool(get_emoji_regexp().search(text))
 
