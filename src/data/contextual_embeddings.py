@@ -49,12 +49,11 @@ if __name__ == "__main__":
         .config('spark.master', f'local[{args.num_cpus}]')\
         .getOrCreate()
 
-    tweets = spark.read.load(args.input, format="csv", sep=",", inferSchema="true", header="true")
-    eval_emojis = udf(lambda emojis: eval(emojis), ArrayType(StringType()))
-    tweets = tweets.withColumn("emojis", eval_emojis(tweets["emojis"]))
+    tweets = spark.read.load(args.input, format="csv", sep=",", inferSchema="true", header="true").limit(1000)
 
     # Initialize BERT model and tokenizer, expand tokenizer with emojis
     all_emojis = set(pd.read_csv(AMBIGUITY_PATH, encoding='utf-8').emoji.unique())
+    tweets = tweets.withColumn("emojis", curry_find_emojis(all_emojis)(tweets["tweet"]))
     model = BertModel.from_pretrained('bert-base-uncased')
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     original_tokenizer_size = len(tokenizer)

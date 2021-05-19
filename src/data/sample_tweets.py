@@ -41,6 +41,6 @@ if __name__ == "__main__":
     tweets = pd.read_table(args.input, header=None, lineterminator='\n', encoding='utf-8')
     tweets = tweets.rename({0: "tweet"}, axis=1)
     print("Sampling...")
-    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)
+    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)["tweet"]
     print("Saving...")
     save_to_csv(out, args.output)
