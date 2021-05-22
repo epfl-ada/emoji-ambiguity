@@ -38,9 +38,11 @@ if __name__ == "__main__":
 
     np.random.seed(42)
     print("Reading data in...")
-    tweets = pd.read_table(args.input, header=None, lineterminator='\n', encoding='utf-8')
+    tweets = pd.read_table(args.input, header=None, lineterminator='\n', quoting=3, encoding='utf-8')
     tweets = tweets.rename({0: "tweet"}, axis=1)
+    tweets = tweets.drop_duplicates('tweet')
+    tweets = tweets.reset_index()
     print("Sampling...")
-    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)["tweet"]
+    out = sample_tweets_by_emojis(tweets, sample_size=args.N, num_cpus=args.num_cpus)[["tweet", "emojis"]]
     print("Saving...")
-    save_to_csv(out, args.output, "\t")
+    save_to_csv(out, args.output)
