@@ -12,10 +12,13 @@ from settings import EMOJI_IMGS
 
 def plot_emoji_barplot(df, ax, col):
     emoji_ticks = df.emoji.to_list()
-    CIs = np.array(df.CIs.to_list()).T
-    low = df[col].values - CIs[0, :]
-    high = CIs[1, :] - df[col].values
-    ax.bar(range(len(emoji_ticks)), df[col].to_list(), yerr=np.vstack((low, high)))
+    if "CIs" in df.columns():
+        CIs = np.array(df.CIs.to_list()).T
+        low = df[col].values - CIs[0, :]
+        high = CIs[1, :] - df[col].values
+        ax.bar(range(len(emoji_ticks)), df[col].to_list(), yerr=np.vstack((low, high)))
+    else:
+        ax.bar(range(len(emoji_ticks)), df[col].to_list())
     for i, c in enumerate(emoji_ticks):
         offset_image(i, c, ax)
     sns.barplot(data=df, x=df.index, y=col, ax=ax)
