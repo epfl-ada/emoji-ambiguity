@@ -7,12 +7,12 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
-from settings import EMOJI_IMGS
+from settings import EMOJI_IMGS, EMOJI_IMGS_CLUSTER
 
 
-def plot_emoji_barplot(df, ax, col):
+def plot_emoji_barplot(df, ax, col, cluster=False):
     emoji_ticks = df.emoji.to_list()
-    if "CIs" in df.columns():
+    if "CIs" in df.columns:
         CIs = np.array(df.CIs.to_list()).T
         low = df[col].values - CIs[0, :]
         high = CIs[1, :] - df[col].values
@@ -20,23 +20,24 @@ def plot_emoji_barplot(df, ax, col):
     else:
         ax.bar(range(len(emoji_ticks)), df[col].to_list())
     for i, c in enumerate(emoji_ticks):
-        offset_image(i, c, ax)
+        offset_image(i, c, ax, cluster=cluster)
     sns.barplot(data=df, x=df.index, y=col, ax=ax)
 
 
-def get_emoji(emoji, log=False):
+def get_emoji(emoji, log=False, cluster=False):
     try:
-        path = os.path.join(EMOJI_IMGS, f"{emoji}.png")
+        directory_path = EMOJI_IMGS_CLUSTER if cluster else EMOJI_IMGS
+        path = os.path.join(directory_path, f"{emoji}.png")
         return plt.imread(path)
     except FileNotFoundError:
         if log:
             print(f"{emoji} not found")
-        path = os.path.join(EMOJI_IMGS, "◻.png")
+        path = os.path.join(directory_path, "◻.png")
         return plt.imread(path)
 
 
-def offset_image(coord, name, ax):
-    img = get_emoji(name)
+def offset_image(coord, name, ax, cluster=False):
+    img = get_emoji(name, cluster=cluster)
     if name in ["⛩", "🏚", "☄", "☪", "🎛", "🎚", "🖲", "↕"]:
         im = OffsetImage(img, zoom=0.01)
     else:
