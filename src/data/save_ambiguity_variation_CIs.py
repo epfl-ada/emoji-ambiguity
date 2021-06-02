@@ -5,20 +5,22 @@ import pandas as pd
 
 from analysis.embedded import calculate_vocabulary_variation, embedded_CIs
 from analysis.embedded import read_embeddings
-from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH
+from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH, AMBIGUITY_CLUSTER
 from utils import parallelize_dataframe, save_to_csv
 
 pd.set_option('mode.chained_assignment', None)
 
 # example usage
 # python3 save_ambiguity_variation_CIs.py
-# --output data/interim/TESTambiguity_variation.csv
+# --output data/interim/ambiguity_variation.csv
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Calculate bootstrapped CIs '
                                                  'for emoji semantic variation in the embedded space and save them')
-    parser.add_argument('--output', action='store', required=True,
+    parser.add_argument('--cluster', type=bool,
+                        help='When cluster is True, use cluster path to the input dataset')
+    parser.add_argument('--output', required=True,
                         help='Location of the output csv with emoji'
                              ' semantic variation with confidence intervals')
     parser.add_argument('--num-cpus', type=int,
@@ -26,7 +28,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("Reading data...")
-    emojis = pd.read_csv(AMBIGUITY_PATH, encoding='utf-8')
+    data_path = AMBIGUITY_PATH
+    if args.cluster:
+        data_path = AMBIGUITY_CLUSTER
+    emojis = pd.read_csv(data_path, encoding='utf-8')
     word_embeddings = read_embeddings(EMBEDDINGS_PATH)
 
     print("Preprocessing...")
@@ -38,13 +43,16 @@ if __name__ == "__main__":
     vocabularies.head()
 
     print("Calculating semantic variation in embedding space per emoji...")
-    vocabularies["variation"] = vocabularies.apply(lambda row:
-                                                   calculate_vocabulary_variation(row.vocabulary,
-                                                                                  word_embeddings), axis=1)
+    vocabularies[["variation", "mode_embedding"]] = vocabularies.apply(lambda row:
+                                                                       calculate_vocabulary_variation(row.vocabulary,
+                                                                                                      word_embeddings),
+                                                                       axis=1,
+                                                                       result_type='expand')
 
     print("Bootstrapping...")
     func = lambda partial_df: partial_df.apply(lambda row: embedded_CIs(calculate_vocabulary_variation,
-                                                                        row.vocabulary, word_embeddings),
+                                                                        row.vocabulary, row.mode_embedding,
+                                                                        word_embeddings),
                                                axis=1)
     CIs = parallelize_dataframe(vocabularies, func, n_cores=args.num_cpus)
     vocabularies["CIs"] = CIs

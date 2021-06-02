@@ -10,8 +10,9 @@ from scipy.spatial.distance import cosine as cosine_distance
 from src.data.utils import flatten
 
 
-def calculate_vocabulary_variation(element, embeddings):
-    mode_embedding = get_mode_embedding(element, embeddings)
+def calculate_vocabulary_variation(element, embeddings, mode_embedding=None):
+    if mode_embedding is None:
+        mode_embedding = get_mode_embedding(element, embeddings)
     if mode_embedding is not None:
         total_count = sum(element.values())
         mode_vec = np.expand_dims(mode_embedding, 0)
@@ -23,8 +24,8 @@ def calculate_vocabulary_variation(element, embeddings):
                 emoji_vec = np.expand_dims(emoji_vec, 0)
                 distance = cosine_distance(mode_vec, emoji_vec)
                 emocab_variance += (count / total_count) * distance
-        return emocab_variance
-    return np.nan
+        return emocab_variance, mode_embedding
+    return np.nan, mode_embedding
 
 
 def calculate_cldr_distance(vocabulary, embeddings, cldr_desc):
@@ -82,10 +83,11 @@ def read_embeddings(embeddings_path):
     return word_embeddings
 
 
-def embedded_CIs(func, vocabulary, word_embeddings, num_draws=1000, alpha=5, **kwargs):
+def embedded_CIs(func, vocabulary, mode_embedding, word_embeddings, num_draws=1000, alpha=5, **kwargs):
     annotations = flatten([[k] * v for k, v in vocabulary.items()])
-    sampler = partial(resampling, func=func, annotations=annotations, word_embeddings=word_embeddings, **kwargs)
-    results = list(map(sampler, range(num_draws)))
+    sampler = partial(resampling, func=func, annotations=annotations, word_embeddings=word_embeddings,
+                      mode_embedding=mode_embedding, **kwargs)
+    results = list(zip(*map(sampler, range(num_draws))))[0]
     results = np.array(results)
     return [np.nanpercentile(results, alpha / 2), np.nanpercentile(results, 100 - (alpha / 2))]
 
