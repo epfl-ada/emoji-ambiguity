@@ -3,10 +3,10 @@ from collections import Counter
 
 import pandas as pd
 
-from analysis.embedded import calculate_vocabulary_variation, embedded_CIs
-from analysis.embedded import read_embeddings
-from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH, AMBIGUITY_CLUSTER
-from utils import parallelize_dataframe, save_to_csv
+from src.analysis.embedded import calculate_vocabulary_variation, embedded_CIs
+from src.analysis.embedded import read_embeddings
+from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH, AMBIGUITY_CLUSTER, EMBEDDINGS_CLUSTER
+from src.data.utils import parallelize_dataframe, save_to_csv
 
 pd.set_option('mode.chained_assignment', None)
 
@@ -18,8 +18,8 @@ pd.set_option('mode.chained_assignment', None)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Calculate bootstrapped CIs '
                                                  'for emoji semantic variation in the embedded space and save them')
-    parser.add_argument('--cluster', type=bool,
-                        help='When cluster is True, use cluster path to the input dataset')
+    parser.add_argument('--cluster', action='store_true', default=False,
+                        help='When cluster is True, use cluster path to the input dataset and embeddings')
     parser.add_argument('--output', required=True,
                         help='Location of the output csv with emoji'
                              ' semantic variation with confidence intervals')
@@ -29,10 +29,12 @@ if __name__ == "__main__":
 
     print("Reading data...")
     data_path = AMBIGUITY_PATH
+    embeddings_path = EMBEDDINGS_PATH
     if args.cluster:
         data_path = AMBIGUITY_CLUSTER
+        embeddings_path = EMBEDDINGS_CLUSTER
     emojis = pd.read_csv(data_path, encoding='utf-8')
-    word_embeddings = read_embeddings(EMBEDDINGS_PATH)
+    word_embeddings = read_embeddings(embeddings_path)
 
     print("Preprocessing...")
     vocabularies = emojis[["emoji", "word"]] \
