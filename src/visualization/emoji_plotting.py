@@ -24,14 +24,35 @@ def plot_emoji_barplot(df, ax, col, cluster=False):
     sns.barplot(data=df, x=df.index, y=col, ax=ax)
 
 
-def get_emoji(emoji, log=False, cluster=False):
+def get_emoji(emoji, log=True, cluster=False):
     try:
         directory_path = EMOJI_IMGS_CLUSTER if cluster else EMOJI_IMGS
+        if emoji == '🛰️':
+            path = os.path.join(directory_path, "satellite.png")
+            return plt.imread(path)
+        elif emoji == '🕰️':
+            path = os.path.join(directory_path, "mantelpiece_clock.png")
+            return plt.imread(path)
+        elif emoji == '◼️':
+            path = os.path.join(directory_path, "medium-black-square.png")
+            return plt.imread(path)
+        elif emoji == '✈️':
+            path = os.path.join(directory_path, "airplane.png")
+            return plt.imread(path)
+        elif emoji == '⬆️':
+            path = os.path.join(directory_path, "arrow_up.png")
+            return plt.imread(path)
+        elif emoji == '↗️':
+            path = os.path.join(directory_path, "north_east_arrow.png")
+            return plt.imread(path) 
+        elif emoji == '↘️':
+            path = os.path.join(directory_path, "south_east_arrow.png")
+            return plt.imread(path) 
         path = os.path.join(directory_path, f"{emoji}.png")
         return plt.imread(path)
     except FileNotFoundError:
         if log:
-            print(f"{emoji} not found")
+            print(f"{path} not found")
         path = os.path.join(directory_path, "◻.png")
         return plt.imread(path)
 
@@ -48,10 +69,10 @@ def offset_image(coord, name, ax, cluster=False):
     ax.add_artist(ab)
 
 
-def emoji_scatter(x, y, emoji, ax=None, zoom=1):
+def emoji_scatter(x, y, emoji, ax=None, zoom=1, cluster=False):
     if ax is None:
         ax = plt.gca()
-    image = get_emoji(emoji)
+    image = get_emoji(emoji, cluster=cluster)
     im = OffsetImage(image, zoom=zoom)
     x, y = np.atleast_1d(x, y)
     artists = []
