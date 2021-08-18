@@ -24,7 +24,7 @@ def plot_emoji_barplot(df, ax, col, cluster=False):
     sns.barplot(data=df, x=df.index, y=col, ax=ax)
 
 
-def get_emoji(emoji, log=False, cluster=False):
+def get_emoji(emoji, log=True, cluster=False):
     try:
         directory_path = EMOJI_IMGS_CLUSTER if cluster else EMOJI_IMGS
         if emoji == '🛰️':
@@ -42,11 +42,17 @@ def get_emoji(emoji, log=False, cluster=False):
         elif emoji == '⬆️':
             path = os.path.join(directory_path, "arrow_up.png")
             return plt.imread(path)
+        elif emoji == '↗️':
+            path = os.path.join(directory_path, "north_east_arrow.png")
+            return plt.imread(path) 
+        elif emoji == '↘️':
+            path = os.path.join(directory_path, "south_east_arrow.png")
+            return plt.imread(path) 
         path = os.path.join(directory_path, f"{emoji}.png")
         return plt.imread(path)
     except FileNotFoundError:
         if log:
-            print(f"{emoji} not found")
+            print(f"{path} not found")
         path = os.path.join(directory_path, "◻.png")
         return plt.imread(path)
 
