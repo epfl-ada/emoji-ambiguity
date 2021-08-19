@@ -1,6 +1,7 @@
 import argparse
 import pandas as pd
 
+from settings import EM_DATASET, AMBIGUITY_PATH
 from src.data.utils import is_valid_file, save_to_csv
 
 # example usage
@@ -11,11 +12,11 @@ from src.data.utils import is_valid_file, save_to_csv
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Fix of mistakes spotted during analysis of em dataset from emojivec project')
-    parser.add_argument('--em-dataset', action='store', required=True,
+        description='Fix of mistakes spotted during analysis of em dataset')
+    parser.add_argument('--em-dataset', default=EM_DATASET,
                         type=lambda x: is_valid_file(parser, x),
                         help='Location of the emoji em dataset')
-    parser.add_argument('--output', action='store', required=True,
+    parser.add_argument('--output', default=AMBIGUITY_PATH,
                         help='Location of the output ambiguity csv')
     args = parser.parse_args()
 

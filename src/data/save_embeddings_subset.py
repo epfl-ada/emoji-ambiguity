@@ -15,7 +15,7 @@ import gensim.models as gs
 import pandas as pd
 
 from utils import is_valid_file
-from src.analysis.embedded import find_embedding
+from src.analysis.variation import find_embedding
 
 # example usage
 # python3 save_embeddings_subset.py

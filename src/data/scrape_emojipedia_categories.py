@@ -4,13 +4,15 @@ import pickle
 import urllib3
 from bs4 import BeautifulSoup
 
+from settings import EMOJI_CATEGORIZED
+
 EMOJI_CATEGORIES = ["people", "nature", "food-drink", "activity",
                     "travel-places", "objects", "symbols", "flags"]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Scrape emoji categories from emojipedia')
-    parser.add_argument('--output', action='store', required=True,
+    parser.add_argument('--output', default=EMOJI_CATEGORIZED,
                         help='Location of the output pickle file')
     args = parser.parse_args()
 

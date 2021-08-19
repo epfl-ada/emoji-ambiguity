@@ -4,8 +4,9 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 project_dir = os.path.join(os.path.dirname(__file__))
+EM_DATASET = os.path.join(project_dir, "data", "raw", "emoji_dataset_prod.csv")
 DEMOGRAPHICS_PATH = os.path.join(project_dir, "data", "raw", "demographic_info.csv")
-AMBIGUITY_PATH = os.path.join(project_dir, "data", "raw", "ambiguity_dataset.csv.gz")
+AMBIGUITY_PATH = os.path.join(project_dir, "data", "interim", "ambiguity_dataset.csv.gz")
 AMBIGUITY_CLUSTER = os.environ.get("AMBIGUITY_CLUSTER")
 EMBEDDINGS_PATH = os.path.join(project_dir, "data", "interim", "glove-twitter-200-ambiguity.bin")
 EMBEDDINGS_CLUSTER = os.environ.get("EMBEDDINGS_CLUSTER")
@@ -13,4 +14,6 @@ AMBIGUITY_VARIATION = os.path.join(project_dir, "data", "interim", "ambiguity_va
 EMOJI_IMGS = os.path.join(project_dir, "data", "external", "emoji_imgs")
 EMOJI_IMGS_CLUSTER = os.environ.get("EMOJI_IMGS_CLUSTER")
 EMOJI_CATEGORIZED = os.path.join(project_dir, "data", "external", "emoji_categories.pkl")
+TWITTER_COUNTS = os.path.join(project_dir, "data", "processed", "twitter-api-context-free-emoji-counts.csv.gz")
 TWITTER_TOKEN = os.environ.get("TWITTER_TOKEN")
+FINAL_DF = os.path.join(project_dir, "data", "processed", "final_dataset.csv")

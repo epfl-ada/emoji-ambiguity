@@ -3,8 +3,8 @@ from collections import Counter
 
 import pandas as pd
 
-from src.analysis.embedded import calculate_vocabulary_variation, embedded_CIs
-from src.analysis.embedded import read_embeddings
+from src.analysis.variation import calculate_vocabulary_variation, embedded_CIs
+from src.analysis.variation import read_embeddings
 from settings import AMBIGUITY_PATH, EMBEDDINGS_PATH, AMBIGUITY_CLUSTER, EMBEDDINGS_CLUSTER
 from src.data.utils import parallelize_dataframe, save_to_csv
 
