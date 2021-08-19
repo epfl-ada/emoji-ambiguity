@@ -14,7 +14,7 @@ if __name__ == "__main__":
         description='Fix of mistakes spotted during analysis of em dataset from emojivec project')
     parser.add_argument('--em-dataset', action='store', required=True,
                         type=lambda x: is_valid_file(parser, x),
-                        help='Location of the emojivec em dataset')
+                        help='Location of the emoji em dataset')
     parser.add_argument('--output', action='store', required=True,
                         help='Location of the output ambiguity csv')
     args = parser.parse_args()
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # Manually spotted mistakes
     # Other cases that didn't pass dictionary check -> notebook 01_ambiguity_exploration
     # Fix of artifacts from emojivec project postprocessing
-    # Spotted during embedding analysis -> 03_embedded_ambiguity
+    # Spotted during embedding analysis -> 02_variation
     correction_mapping = {"oh h": "ohh", "om g": "omg",
                           "id k": "idk", "hmm m": "hmmm",
                           "ship a": "ship", "jappanesepostoffice": "japanese post office",

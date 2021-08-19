@@ -79,7 +79,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         # TODO: change twitter-stream to twitter-api, change dir name
         description="Process tweets from twitter seatch API compressed .zip jsons to dataframes and save them as parquet files, clean tweets from hashtags, mentions and urls")
-    parser.add_argument('--input', default="/scratch/czestoch/twitter-stream",help="Path to the directory with emoji directories containing zipped json files with batches of tweets to be processed")
+    parser.add_argument('--input', default="/scratch/czestoch/twitter-api-emojis",help="Path to the directory with emoji directories containing zipped json files with batches of tweets to be processed")
     parser.add_argument('--output', required=True, help="Path to the output parquet dataframes with english tweets containing emojis")
     parser.add_argument('--num-cpus', required=False, default=30, help="Number of CPU cores to use with multiprocessing, default: 30")
     args = parser.parse_args()

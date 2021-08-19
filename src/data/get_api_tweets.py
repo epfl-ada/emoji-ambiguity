@@ -1,22 +1,21 @@
-import time
-import datetime
 import argparse
-import pandas as pd
-import jsonlines
-import zipfile
+import datetime
 import os
-from tqdm import tqdm
+import zipfile
+
 import emoji as em
-from twarc import Twarc2, expansions
+import jsonlines
+import pandas as pd
 from requests import HTTPError
+from twarc import Twarc2, expansions
 
+from settings import TWITTER_TOKEN, AMBIGUITY_VARIATION
 
-# Replace your bearer token below
-client = Twarc2(bearer_token="AAAAAAAAAAAAAAAAAAAAACNLMgEAAAAA9XQ1uVEUTCX1NUcnTzRYjkUbWbc%3DBAwSbwpXyegTXqQxt6hytr6w21UdBO1U3uwTSxPwuvSFkEZf6n")
+client = Twarc2(bearer_token=TWITTER_TOKEN)
 
 
 def main(args):
-    emojis = pd.read_csv(args.context_free).emoji.values
+    emojis = pd.read_csv(AMBIGUITY_VARIATION).emoji.values
     compression = zipfile.ZIP_DEFLATED
 
     # Specify the start time in UTC for the time period you want Tweets from
@@ -61,11 +60,13 @@ def main(args):
         except HTTPError as e:
             print(e)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Request twitter search API for tweets with emojis from context-free dataset starting and ending in a precised timeframe")
-    parser.add_argument('--context-free', default='/scratch/czestoch/emoji-measures/ambiguity_variation.csv.gz', help="Path to the context-free dataset")
-    parser.add_argument('--output', default='/scratch/czestoch/twitter-stream', help="Path to the output files directory path")
+        description="Request twitter search API for tweets with emojis "
+                    "from context-free dataset starting and ending in a precised timeframe")
+    parser.add_argument('--output', default='/scratch/czestoch/twitter-api-emojis',
+                        help="Path to the output files directory path")
     parser.add_argument('--start', required=True, help="Start date of tweets in format: Y-m-d eg: 2019-10-01")
     parser.add_argument('--stop', required=True, help="End date of tweets in format: Y-m-d eg: 2019-10-01")
     args = parser.parse_args()

@@ -1,7 +1,6 @@
 import random
 from collections import Counter
 from functools import partial
-from itertools import product
 
 import numpy as np
 from gensim import models as gs
@@ -18,7 +17,6 @@ def calculate_vocabulary_variation(element, embeddings, mode_embedding=None):
         mode_vec = np.expand_dims(mode_embedding, 0)
         emocab_variance = 0
         for emoji, count in element.items():
-            # emoji_vec = embeddings.get_vector(emoji)
             emoji_vec = get_embedding(embeddings, emoji)
             if emoji_vec is not None:
                 emoji_vec = np.expand_dims(emoji_vec, 0)
@@ -26,20 +24,6 @@ def calculate_vocabulary_variation(element, embeddings, mode_embedding=None):
                 emocab_variance += (count / total_count) * distance
         return emocab_variance, mode_embedding
     return np.nan, mode_embedding
-
-
-def calculate_cldr_distance(vocabulary, embeddings, cldr_desc):
-    pairs = list(product(list(vocabulary.keys()), list(cldr_desc)))
-    total_count = sum(vocabulary.values())
-    total_distance = 0
-    for pair in pairs:
-        vec1 = get_embedding(embeddings, pair[0])
-        # vec2 = embeddings.get(pair[1], None)
-        vec2 = get_embedding(embeddings, pair[1])
-        if vec1 is not None and vec2 is not None:
-            probability = vocabulary[pair[0]] / total_count
-            total_distance += cosine_distance(vec1, vec2) * probability
-    return total_distance
 
 
 def get_mode_embedding(element, embeddings):
