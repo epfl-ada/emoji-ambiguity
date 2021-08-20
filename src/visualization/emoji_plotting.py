@@ -10,7 +10,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from settings import EMOJI_IMGS, EMOJI_IMGS_CLUSTER
 
 
-def plot_emoji_barplot(df, ax, col, cluster=False):
+def plot_emoji_barplot(df, ax, col, log=False, cluster=False):
     emoji_ticks = df.emoji.to_list()
     if "CIs" in df.columns:
         CIs = np.array(df.CIs.to_list()).T
@@ -20,11 +20,11 @@ def plot_emoji_barplot(df, ax, col, cluster=False):
     else:
         ax.bar(range(len(emoji_ticks)), df[col].to_list())
     for i, c in enumerate(emoji_ticks):
-        offset_image(i, c, ax, cluster=cluster)
+        offset_image(i, c, ax, log=log, cluster=cluster)
     sns.barplot(data=df, x=df.index, y=col, ax=ax)
 
 
-def get_emoji(emoji, log=True, cluster=False):
+def get_emoji(emoji, log, cluster=False):
     try:
         directory_path = EMOJI_IMGS_CLUSTER if cluster else EMOJI_IMGS
         if emoji == '🛰️':
@@ -57,8 +57,8 @@ def get_emoji(emoji, log=True, cluster=False):
         return plt.imread(path)
 
 
-def offset_image(coord, name, ax, cluster=False):
-    img = get_emoji(name, cluster=cluster)
+def offset_image(coord, name, ax, log, cluster=False):
+    img = get_emoji(name, log=log, cluster=cluster)
     if name in ["⛩", "🏚", "☄", "☪", "🎛", "🎚", "🖲", "↕"]:
         im = OffsetImage(img, zoom=0.01)
     else:
@@ -69,10 +69,10 @@ def offset_image(coord, name, ax, cluster=False):
     ax.add_artist(ab)
 
 
-def emoji_scatter(x, y, emoji, ax=None, zoom=1, cluster=False):
+def emoji_scatter(x, y, emoji, ax=None, zoom=1, cluster=False, log=False):
     if ax is None:
         ax = plt.gca()
-    image = get_emoji(emoji, cluster=cluster)
+    image = get_emoji(emoji, cluster=cluster, log=log)
     im = OffsetImage(image, zoom=zoom)
     x, y = np.atleast_1d(x, y)
     artists = []

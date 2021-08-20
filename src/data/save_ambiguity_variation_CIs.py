@@ -42,7 +42,6 @@ if __name__ == "__main__":
         .apply(list).apply(Counter) \
         .reset_index() \
         .rename({"word": "vocabulary"}, axis=1)
-    vocabularies.head()
 
     print("Calculating semantic variation in embedding space per emoji...")
     vocabularies[["variation", "mode_embedding"]] = vocabularies.apply(lambda row:

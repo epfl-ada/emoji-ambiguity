@@ -4,11 +4,13 @@ import pickle
 import pandas as pd
 
 from settings import EMOJI_CATEGORIZED, AMBIGUITY_PATH, TWITTER_COUNTS, FINAL_DF
-from emoji_categorization import fine_grained_categories
-from utils import is_valid_file, save_to_csv
+from src.data.emoji_categorization import fine_grained_categories
+from src.data.utils import is_valid_file, save_to_csv
 
 
 def assign_emojipedia_category(emoji):
+    with open(EMOJI_CATEGORIZED, 'rb') as f:
+        categorized = pickle.load(f)
     for category in categorized:
         if emoji in categorized[category]:
             return category
@@ -51,4 +53,7 @@ if __name__ == "__main__":
     ambiguity = ambiguity.fillna(0)
 
     print("Saving to csv...")
-    save_to_csv(ambiguity, args.output)
+    output_path = args.output
+    if ".gz" in output_path:
+        output_path = args.output[:-3]
+    save_to_csv(ambiguity, output_path)
