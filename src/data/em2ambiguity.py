@@ -47,4 +47,7 @@ if __name__ == "__main__":
     emojis.word = emojis.word.replace(correction_mapping)
 
     print("Saving to csv...")
-    save_to_csv(emojis, args.output)
+    output_path = args.output
+    if ".gz" in output_path:
+        output_path = args.output[:-3]
+    save_to_csv(emojis, output_path)

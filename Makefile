@@ -1,11 +1,11 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data requirements sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
+BUCKET = emoji-test-bucket
 PROFILE = default
 PROJECT_NAME = emoji-ambiguity
 PYTHON_INTERPRETER = python3
@@ -27,24 +27,12 @@ requirements: test_environment
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+	./make_dataset.sh
 
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
-
-## Lint using flake8
-lint:
-	flake8 src
-
-## Upload Data to S3
-sync_data_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync data/ s3://$(BUCKET)/data/
-else
-	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-endif
 
 ## Download Data from S3
 sync_data_from_s3:
