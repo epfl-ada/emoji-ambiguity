@@ -33,3 +33,24 @@
     │       └── emoji_plotting.py <- Functions to plot emoji scatter plots
     └──
  
+ 
+###  System requirements and installation guide
+
+We recommend a local installation of new Python virtual environment. The code was tested on Ubuntu 18.04.
+Please use the packages versions provided in requirements.txt
+
+
+1. Open the terminal. To avoid any incompatibility issue,
+ please create a new virtual environment. This project was created using [virtualenvwrapper](]https://virtualenvwrapper.readthedocs.io/en/latest/)
+
+`pip install virtualenvwrapper` <br>
+`mkvirtualenv emoji-ambiguity -r requirements.txt -p python3.7` <br>
+
+The environment should be activated automatically, if not use: <br>
+`workon emoji-ambiguity`
+
+2. Start a Jupyter notebook server. <br>
+`cd notebooks` <br>
+`jupyter notebook`
+
+4. Select "Cells -> Run all". The figures will be displayed in the browser and saved in emoji-ambiguity/figures folder.
