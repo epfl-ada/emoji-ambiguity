@@ -7,26 +7,12 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
-from settings import EMOJI_IMGS, EMOJI_IMGS_CLUSTER
+from settings import EMOJI_IMGS
 
 
-def plot_emoji_barplot(df, ax, col, log=False, cluster=False):
-    emoji_ticks = df.emoji.to_list()
-    if "CIs" in df.columns:
-        CIs = np.array(df.CIs.to_list()).T
-        low = df[col].values - CIs[0, :]
-        high = CIs[1, :] - df[col].values
-        ax.bar(range(len(emoji_ticks)), df[col].to_list(), yerr=np.vstack((low, high)))
-    else:
-        ax.bar(range(len(emoji_ticks)), df[col].to_list())
-    for i, c in enumerate(emoji_ticks):
-        offset_image(i, c, ax, log=log, cluster=cluster)
-    sns.barplot(data=df, x=df.index, y=col, ax=ax)
-
-
-def get_emoji(emoji, log, cluster=False):
+def get_emoji(emoji, log):
     try:
-        directory_path = EMOJI_IMGS_CLUSTER if cluster else EMOJI_IMGS
+        directory_path = EMOJI_IMGS
         if emoji == '🛰️':
             path = os.path.join(directory_path, "satellite.png")
             return plt.imread(path)
@@ -48,8 +34,8 @@ def get_emoji(emoji, log, cluster=False):
         return plt.imread(path)
 
 
-def offset_image(coord, name, ax, log, cluster=False):
-    img = get_emoji(name, log=log, cluster=cluster)
+def offset_image(coord, name, ax, log):
+    img = get_emoji(name, log=log)
     if name in ["⛩", "🏚", "☄", "☪", "🎛", "🎚", "🖲", "↕"]:
         im = OffsetImage(img, zoom=0.01)
     else:
@@ -60,10 +46,10 @@ def offset_image(coord, name, ax, log, cluster=False):
     ax.add_artist(ab)
 
 
-def emoji_scatter(x, y, emoji, ax=None, zoom=1, cluster=False, log=False):
+def emoji_scatter(x, y, emoji, ax=None, zoom=1, log=False):
     if ax is None:
         ax = plt.gca()
-    image = get_emoji(emoji, cluster=cluster, log=log)
+    image = get_emoji(emoji, log=log)
     im = OffsetImage(image, zoom=zoom)
     x, y = np.atleast_1d(x, y)
     artists = []

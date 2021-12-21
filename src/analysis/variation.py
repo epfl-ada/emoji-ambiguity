@@ -67,7 +67,7 @@ def read_embeddings(embeddings_path):
     return word_embeddings
 
 
-def embedded_CIs(func, vocabulary, mode_embedding, word_embeddings, num_draws=1000, alpha=5, **kwargs):
+def embedded_CIs(func, vocabulary, mode_embedding, word_embeddings, num_draws=2, alpha=5, **kwargs):
     annotations = flatten([[k] * v for k, v in vocabulary.items()])
     sampler = partial(resampling, func=func, annotations=annotations, word_embeddings=word_embeddings,
                       mode_embedding=mode_embedding, **kwargs)
