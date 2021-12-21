@@ -30,9 +30,6 @@ def get_emoji(emoji, log, cluster=False):
         if emoji == '🛰️':
             path = os.path.join(directory_path, "satellite.png")
             return plt.imread(path)
-        elif emoji == '🕰️':
-            path = os.path.join(directory_path, "mantelpiece_clock.png")
-            return plt.imread(path)
         elif emoji == '◼️':
             path = os.path.join(directory_path, "medium-black-square.png")
             return plt.imread(path)
@@ -42,12 +39,6 @@ def get_emoji(emoji, log, cluster=False):
         elif emoji == '⬆️':
             path = os.path.join(directory_path, "arrow_up.png")
             return plt.imread(path)
-        elif emoji == '↗️':
-            path = os.path.join(directory_path, "north_east_arrow.png")
-            return plt.imread(path) 
-        elif emoji == '↘️':
-            path = os.path.join(directory_path, "south_east_arrow.png")
-            return plt.imread(path) 
         path = os.path.join(directory_path, f"{emoji}.png")
         return plt.imread(path)
     except FileNotFoundError:

@@ -17,3 +17,7 @@ EMOJI_CATEGORIZED = os.path.join(project_dir, "data", "external", "emoji_categor
 TWITTER_COUNTS = os.path.join(project_dir, "data", "external", "twitter-api-context-free-emoji-counts.csv.gz")
 TWITTER_TOKEN = os.environ.get("TWITTER_TOKEN")
 FINAL_DF = os.path.join(project_dir, "data", "processed", "final_dataset.csv.gz")
+BASELINE_VARIATION = 0.6860900973280272
+BASELINE_VARIATION_CIs = [0.5707602351453775, 0.8834659105717826]
+BASELINE_VOCAB_SIZE = 30
+BASELINE_VOCAB_SIZE_CIs = [27.0, 30.0]
