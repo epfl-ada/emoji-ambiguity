@@ -49,6 +49,9 @@ Please use the packages versions provided in requirements.txt
 The environment should be activated automatically, if not use: <br>
 `workon emoji-ambiguity`
 
+To deactivate environment simply use: <br>
+`deactivate`
+
 2. Start a Jupyter notebook server. <br>
 `cd notebooks` <br>
 `jupyter notebook`
