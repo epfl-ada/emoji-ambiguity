@@ -1,4 +1,4 @@
-### Code and data for: Ambiguity of Emojis: How Do we Interpret Emojis Outside of Contexts?
+### Code and data for: On the Context-Free Ambiguity of Emoji: A Data-Driven Study of 1,289 Emojis
 
 
 ### Repository structure
@@ -9,14 +9,16 @@
     ├── settings.py        <- Project constants: data paths used in the notebook
     ├── data               
     │   ├── emoji_imgs                        <- .png images of emojis used for plotting
-    │   ├── final_dataset.csv.gz              <- dataset containing human annotations for emojis in the context-free setting
-    │   ├── glove-twitter-200-ambiguity.bin   <- subset of glove gensim twitter embeddings for words from our dataset
-    │   └── emoji_categories.pkl              <- scraped emojipedia categories
+    │   ├── final_dataset.csv.gz              <- Sataset containing human annotations for emojis in the context-free setting
+    │   ├── glove-twitter-200-ambiguity.bin   <- Subset of glove gensim twitter embeddings for words from our dataset
+    │   ├── emoji_categories_x.csv            <- Annotations of symbolic levels from author x
+    │   ├── emoji_categories_y.csv            <- Annotations of symbolic levels from author y
+    │   └── emoji_categories.pkl              <- Scraped emojipedia categories
     │
     ├── notebooks          <- Jupyter notebooks
     │   └── final_notebook.ipynb   <- Notebook with plotting code for: Fig 1, 2, 3 and table 1
     │
-    ├── figures            <- Generated figures, figure: 1, 2, 3
+    ├── figures            <- Generated figures, figure: 1
     │
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
     │                         generated with `pip freeze > requirements.txt`
