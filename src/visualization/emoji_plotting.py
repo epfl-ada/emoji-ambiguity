@@ -4,7 +4,6 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 from settings import EMOJI_IMGS
