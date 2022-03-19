@@ -19,8 +19,12 @@
   "params": [
     {"name": "x", "value": 0.69},
     {"name": "x2", "value": 0.69},
-    {"name": "y", "value": 26},
+    {"name": "y", "value": 30},
     {"name": "y2", "value": -0.02},
+    {"name": "x11", "value": 0},
+    {"name": "x12", "value": 0.8},
+    {"name": "y11", "value": 30},
+    {"name": "y12", "value": 30},
     {"name": "strokeWidth", "value": 2},
     {"name": "strokeDash", "value": [8, 8]}
   ],
@@ -28,13 +32,39 @@
     {
       "mark": {
         "type": "rect",
+        "x": 0,
+        "x2": 1500,
+        "y": 0,
+        "y2": 100,
+        "color": "#DFDFDF",
+        "opacity": 0.3,
+        "fillOpacity": 0.1
+      }
+    },
+    {
+      "mark": {
+        "type": "rect",
         "x": 1070,
         "x2": 1500,
-        "y": -20,
+        "y": 0,
         "y2": 800,
         "color": "#DFDFDF",
         "opacity": 0.3,
         "fillOpacity": 0.1
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "color": "black",
+        "strokeWidth": {"expr": "strokeWidth"},
+        "strokeDash": {"expr": "strokeDash"}
+      },
+      "encoding": {
+        "x": {"datum": {"expr": "x11"}, "type": "quantitative"},
+        "y": {"datum": {"expr": "y11"}, "type": "quantitative"},
+        "x2": {"datum": {"expr": "x12"}},
+        "y2": {"datum": {"expr": "y12"}}
       }
     },
     {
