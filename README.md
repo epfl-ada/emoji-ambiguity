@@ -1,4 +1,4 @@
-### Code and data for: On the Context-Free Ambiguity of Emoji: A Data-Driven Study of 1,289 Emojis
+### Code and data for: On the Context-Free Ambiguity of Emoji
 
 
 ### Repository structure
@@ -9,7 +9,8 @@
     ├── settings.py        <- Project constants: data paths used in the notebook
     ├── data               
     │   ├── emoji_imgs                        <- .png images of emojis used for plotting
-    │   ├── final_dataset.csv.gz              <- Sataset containing human annotations for emojis in the context-free setting
+    │   ├── emoji_annotations.csv.gz          <- Dataset containing human annotations for emojis in the context-free setting along with assigned fine-grained emoji categories
+        ├── ambiguity_scores.csv.gz           <- Dataset containing emojis' semantic variations and vocabularies
     │   ├── glove-twitter-200-ambiguity.bin   <- Subset of glove gensim twitter embeddings for words from our dataset
     │   ├── emoji_categories_x.csv            <- Annotations of symbolic levels from author x
     │   ├── emoji_categories_y.csv            <- Annotations of symbolic levels from author y
@@ -59,3 +60,6 @@ To deactivate the environment simply use: <br>
 `jupyter notebook`
 
 4. Select "Cells -> Run all". The figures will be displayed in the browser and saved in emoji-ambiguity/figures folder.
+
+Please cite as On the Context-Free Ambiguity of Emoji: A Data-Driven Study of 1,289 Emojis. Justyna Częstochowska, Kristina Gligorić, Maxime Peyrard, Yann Mentha, Michal Bien, Andrea Grütter, Anita Auer, Aris Xanthos and Robert West.
+In Proc. of the International AAAI Conference on Web and Social Media ICWSM, 2022.
