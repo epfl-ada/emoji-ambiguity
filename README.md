@@ -61,5 +61,7 @@ To deactivate the environment simply use: <br>
 
 4. Select "Cells -> Run all". The figures will be displayed in the browser and saved in emoji-ambiguity/figures folder.
 
-Please cite as On the Context-Free Ambiguity of Emoji: A Data-Driven Study of 1,289 Emojis. Justyna Częstochowska, Kristina Gligorić, Maxime Peyrard, Yann Mentha, Michal Bien, Andrea Grütter, Anita Auer, Aris Xanthos and Robert West.
+### Cite us
+Please cite as:
+On the Context-Free Ambiguity of Emoji. Justyna Częstochowska, Kristina Gligorić, Maxime Peyrard, Yann Mentha, Michal Bien, Andrea Grütter, Anita Auer, Aris Xanthos and Robert West.
 In Proc. of the International AAAI Conference on Web and Social Media ICWSM, 2022.
