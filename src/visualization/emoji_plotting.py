@@ -45,11 +45,11 @@ def offset_image(coord, name, ax, log):
     ax.add_artist(ab)
 
 
-def emoji_scatter(x, y, emoji, ax=None, zoom=1, log=False):
+def emoji_scatter(x, y, emoji, ax=None, zoom=1, alpha=1, log=False):
     if ax is None:
         ax = plt.gca()
     image = get_emoji(emoji, log=log)
-    im = OffsetImage(image, zoom=zoom)
+    im = OffsetImage(image, zoom=zoom, alpha=alpha)
     x, y = np.atleast_1d(x, y)
     artists = []
     for x0, y0 in zip(x, y):
