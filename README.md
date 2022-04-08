@@ -59,7 +59,7 @@ To deactivate the environment simply use: <br>
 `cd notebooks` <br>
 `jupyter notebook`
 
-4. Select "Cells -> Run all". The figures will be displayed in the browser and saved in emoji-ambiguity/figures folder.
+4. Select "Cells -> Run all". The figures and table with emoji categories and their descriptions will be displayed in the browser, figures will be saved in emoji-ambiguity/figures folder.
 
 ### Cite us
 Please cite as:
